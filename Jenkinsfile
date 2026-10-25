@@ -2,9 +2,6 @@ pipeline{
     agent {
         label 'docker-trivy'
     }
-    environment {
-        
-    }
     stages{
         stage('Trivy Files Scan'){
             steps{
