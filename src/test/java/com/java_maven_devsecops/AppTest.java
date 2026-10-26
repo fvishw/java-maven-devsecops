@@ -1,4 +1,4 @@
-package com.java-maven;
+package com.java_maven_devsecops;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.ByteArrayInputStream;
@@ -49,7 +49,7 @@ class AppTest {
             assertTrue(response.headers().firstValue("Content-Type")
                     .orElse("").startsWith("text/html; charset=UTF-8"));
             assertEquals(
-                    "<h1>Cloud With VarJosh</h1><p>Simple DevSecOps Demo App</p>",
+                    "<h1>com.java-maven-devsecops</h1><p>Simple DevSecOps Demo App</p>",
                     response.body());
         } finally {
             server.stop(0);

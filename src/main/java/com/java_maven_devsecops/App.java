@@ -1,4 +1,4 @@
-package com.java-maven;
+package com.java_maven_devsecops;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
@@ -14,14 +14,14 @@ public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private static final int PORT = 8080;
     private static final String BRAND_HTML =
-            "<h1>Cloud With VarJosh</h1><p>Simple DevSecOps Demo App</p>";
+            "<h1>com.java-maven-devsecops</h1><p>Simple DevSecOps Demo App</p>";
 
     public static void main(String[] args) throws IOException {
         start(System.in, PORT);
     }
 
     static HttpServer start(InputStream input, int port) throws IOException {
-        LOGGER.info("Starting CVWJ DevSecOps Demo...");
+        LOGGER.info("Starting com.java-maven-devsecops...");
         LOGGER.info("Enter username:");
         String username = readUsername(input);
         LOGGER.info(greeting(username));
