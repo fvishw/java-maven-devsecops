@@ -43,8 +43,14 @@ pipeline{
         }
         stage('Trivy Docker Image Scan'){
             steps{
-                sh 'trivy image --cache-dir .trivycache --exit-code 1 --severity HIGH,CRITICAL "$IMAGE_REPO:$BUILD_NUMBER"'
+                sh '''
+                    TMPDIR=/var/tmp/trivy trivy image \
+                    --cache-dir "$HOME/.trivycache" \
+                    --exit-code 1 \
+                    --severity HIGH,CRITICAL \
+                    $IMAGE_REPO:$BUILD_NUMBER
+                '''
             }
         }
     }
-}
+}"
