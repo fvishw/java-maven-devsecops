@@ -1,4 +1,5 @@
-FROM eclipse-temurin:21
+FROM FROM eclipse-temurin:25-jre
+
 WORKDIR /app
 COPY target/com.java-maven-devsecops-1.0.0-SNAPSHOT.jar app.jar
 EXPOSE 8080
