@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jre
+FROM gcr.io/distroless/java21-debian13:nonroot
 
 WORKDIR /app
 COPY target/com.java-maven-devsecops-1.0.0-SNAPSHOT.jar app.jar
