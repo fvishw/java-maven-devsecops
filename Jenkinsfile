@@ -8,7 +8,8 @@ pipeline{
     environment {
         SONAR_IP = '172.31.11.67'
         ECR_REGISTRY = '389352669036.dkr.ecr.ap-south-1.amazonaws.com'
-
+        IMAGE_NAME = 'maven-app'
+        IMAGE_REPO = "${ECR_REGISTRY}/${IMAGE_NAME}"
     }
     stages{
         stage('Trivy Files Scan'){
@@ -33,6 +34,11 @@ pipeline{
         stage('ECR login'){
             steps{
                 sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}'
+            }
+        }
+        stage('Build Docker Image'){
+            steps{
+                sh 'docker build --platform linux/amd64 -t ${IMAGE_REPO}:latest -t ${IMAGE_REPO}:${BUILD_NUMBER} .'
             }
         }
     }
