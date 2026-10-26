@@ -1,4 +1,4 @@
-package com.cloudwithvarjosh;
+package com.java-maven;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
