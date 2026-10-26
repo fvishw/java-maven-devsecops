@@ -1,59 +1,57 @@
 package com.cloudwithvarjosh;
 
 import com.sun.net.httpserver.HttpServer;
-import java.net.InetSocketAddress;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class App {
 
-    // 1) Hardcoded secret (Security Hotspot)
-    private static final String API_KEY = "DEMO_SECRET";
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+    private static final int PORT = 8080;
+    private static final String BRAND_HTML =
+            "<h1>Cloud With VarJosh</h1><p>Simple DevSecOps Demo App</p>";
 
-    public static void main(String[] args) throws Exception {
-
-        // 2) Using System.out instead of logger (Maintainability)
-        System.out.println("Starting CVWJ DevSecOps Demo...");
-
-        // 3) Scanner resource leak + wrong string comparison (two findings)
-        String username = "guest"; // safe fallback for Docker
-
-        try {
-            Scanner sc = new Scanner(System.in); // resource leak (intentional)
-            System.out.print("Enter username: ");
-            if (sc.hasNextLine()) {
-                username = sc.nextLine();
-            }
-        } catch (Exception e) {
-            // ignore for non-interactive mode
-        }
-
-        // 4) Wrong comparison (Bug)
-        if (username == "admin") { // Sonar will flag this
-            System.out.println("Welcome, admin!");
-        } else {
-            System.out.println("Hello, " + username);
-        }
-
-        // Simple homepage
-        int port = 8080;
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext("/", exchange -> {
-            String body = brandHtml();
-            byte[] out = body.getBytes();
-            exchange.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
-            exchange.sendResponseHeaders(200, out.length);
-            OutputStream os = exchange.getResponseBody();
-            os.write(out);
-            os.close();
-        });
-
-        System.out.println("app running on port " + port);
-        server.start();
+    public static void main(String[] args) throws IOException {
+        start(System.in, PORT);
     }
 
-    // simple helper method for tests
-    public static String brandHtml() {
-        return "<h1>Cloud With VarJosh</h1><p>Simple DevSecOps Demo App</p>";
+    static HttpServer start(InputStream input, int port) throws IOException {
+        LOGGER.info("Starting CVWJ DevSecOps Demo...");
+        LOGGER.info("Enter username:");
+        String username = readUsername(input);
+        LOGGER.info(greeting(username));
+
+        HttpServer server = createServer(port);
+        LOGGER.info("app running on port " + server.getAddress().getPort());
+        server.start();
+        return server;
+    }
+
+    static String readUsername(InputStream input) {
+        try (Scanner scanner = new Scanner(input, StandardCharsets.UTF_8)) {
+            return scanner.hasNextLine() ? scanner.nextLine() : "guest";
+        }
+    }
+
+    static String greeting(String username) {
+        return "admin".equals(username) ? "Welcome, admin!" : "Hello, " + username;
+    }
+
+    private static HttpServer createServer(int port) throws IOException {
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        server.createContext("/", exchange -> {
+            byte[] body = BRAND_HTML.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
+            exchange.sendResponseHeaders(200, body.length);
+            try (OutputStream output = exchange.getResponseBody()) {
+                output.write(body);
+            }
+        });
+        return server;
     }
 }
