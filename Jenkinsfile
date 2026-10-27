@@ -52,5 +52,11 @@ pipeline{
                 '''
             }
         }
+        stage('Push Docker Image'){
+            steps{
+                sh 'docker push ${IMAGE_REPO}:latest'
+                sh 'docker push ${IMAGE_REPO}:${BUILD_NUMBER}'
+            }
+        }
     }
 }
