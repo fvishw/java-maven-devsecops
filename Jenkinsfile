@@ -8,7 +8,7 @@ pipeline{
     environment {
         SONAR_IP = '172.31.11.67'
         ECR_REGISTRY = '389352669036.dkr.ecr.ap-south-1.amazonaws.com'
-        IMAGE_NAME = 'maven-app'
+        IMAGE_NAME = 'java-maven'
         IMAGE_REPO = "${ECR_REGISTRY}/${IMAGE_NAME}"
     }
     stages{
