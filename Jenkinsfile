@@ -58,5 +58,10 @@ pipeline{
                 sh 'docker push ${IMAGE_REPO}:${BUILD_NUMBER}'
             }
         }
+        stage('Update Kubernetes Deployment'){
+            steps {
+                sh 'sed -i "s|image:.*|image: $IMAGE_REPO:$BUILD_NUMBER|g" deploy-svc.yaml'
+            }
+        }
     }
 }
